@@ -1,0 +1,42 @@
+
+.icon {
+  display: none;
+}
+
+.icon-correct:before {
+	content: '\f418';
+	font: normal 30px/1 'Genericons';
+  color: $green;
+	display: inline-block;
+  vertical-align: middle;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-error:before {
+	content: '\f405';
+	font: normal 30px/1 'Genericons';
+  color: $red;
+	display: inline-block;
+  vertical-align: middle;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dot:before {
+	content: '\f428';
+	font: normal 30px/1 'Genericons';
+  color: $red;
+	display: inline-block;
+  vertical-align: middle;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-success {
+  color: $green;
+}
+
+.icon-success:before {
+  @extend .icon-correct;
+}

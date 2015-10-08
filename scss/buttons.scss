@@ -1,0 +1,52 @@
+// buttons
+
+button,
+.btn {
+  background-color: $blue;
+  border: none;
+  border-bottom: 2px solid darken($blue, 20%);
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  margin: $u 0;
+  max-width: 10 * $u;
+  padding: 0.5 * $u; // -2px beacause of border-bottom
+  position: relative;
+  top: -1px;
+
+  &:hover {
+    background-color: darken($blue, 10%);
+  }
+  &:active {
+    background-color: darken($blue, 20%);
+  }
+}
+
+.btn-animate {
+  display: inline-block;
+  transition: all 0.25s ease;
+  width: 9rem;
+}
+
+.btn-animate:before {
+  content: '\f428';
+  color: $gray;
+  display: inline-block;
+  font: normal 21px/1 'Genericons';
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-animate.is-on:before {
+  color: $yellow !important;
+  text-shadow: 0 0 5px;
+}
+
+.btn-success.is-on {
+  background-color: $green;
+}

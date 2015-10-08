@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatibile" content="IE=edge">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="---">
+<meta name="keywords" content="---">
+<meta name="author" content="---">
+
+<title> --- </title>
+
+<link href="css/all.css" rel="stylesheet">
+<link href="prism/prism.css" rel="stylesheet">
+<link href="/icons/genericons/genericons.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <header>
+  <h1>Input field state indicators</h1>
+  <h2>Experiments with animations and CSS</h2>
+  </header>
+
+  <div class="wrapper">
+
+  <section>
+
+    <h1>Foundation</h1>
+
+    <p>Here's the SASS foundation. Everything else is build on top of it.</p>
+
+    <pre><code class="language-sass">
+input {
+  border: 1px solid $gray;
+  box-shadow: inset 0 1px 3px $gray;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  max-width: 21rem;
+  min-width: 14rem;
+  padding: 0.5em;
+  width: 100%;
+  &:focus {
+    border-color: $blue;
+    box-shadow: inset 0 1px 3px $blue;
+    outline: none;
+    transition: 0.125s ease;
+  }
+}
+    </code></pre>
+    <form>
+      <input type="email">
+    </form>
+
+  </section>
+
+  <h1>Focus</h1>
+
+    <section>
+
+      <h2>Zoom in</h2>
+
+      <form>
+        <div class="fixed-height">
+        <input class="input-zoom input-small" type=" " placeholder="search">
+        </div>
+      </form>
+
+      <p>
+        That's a tricky one. If an UI element can change shape, it can also trigger
+        change in placement of other elements. That way, you can force browser to
+        recalculate and repaint the whole layout.
+      </p>
+
+      <p>
+        To prevent this, you should close the resizable element in a box with fixed
+        height or width. In this example I creaded a DIV frame with 4rem height, and
+        placed the form inside it.
+      </p>
+
+      <pre><code class="language-sass">
+.input-small {
+  font-size: 0.75rem;
+  max-width: 12rem;
+}
+
+.input-zoom {
+  &:focus {
+    font-size: 1rem;
+    max-width: 21rem;
+  }
+}
+
+.fixed-height {
+  height: 4rem;
+}
+      </code></pre>
+
+    </section>
+
+    <section>
+
+      <h2>Shades of gray</h2>
+
+      <form class="form-shades">
+        <input class="input-shades" type="email">
+      </form>
+
+      <pre><code class="language-sass">
+.form-shades {
+  background-color: #dedede;
+  padding: 1em;
+}
+
+.input-shades {
+  background-color: #efefff;
+  &:focus {
+    background-color: #fff;
+  }
+}
+      </code></pre>
+
+    </section>
+
+    <section>
+      <h2>3D-like exposure</h2>
+
+      <form>
+        <label>field one</label>
+        <input class="input-3d" type="email">
+        <label>field two</label>
+        <input class="input-3d" type="email">
+      </form>
+
+      <pre><code class="language-sass">
+.input-3d {
+  box-shadow: inset 0 2px 6px $gray;
+  &:focus {
+    box-shadow: inset 0 0 2px $gray;
+    border-color: $gray;
+  }
+}
+      </code></pre>
+    </section>
+
+    <h1>Error/Correct Animations</h1>
+
+    <section>
+      <h2>Foundation</h2>
+
+      <form id="form-animate-1">
+
+        <label>correct</label>
+        <input class="input is-checked input-correct">
+        <span class="icon icon-correct is-checked show"></span>
+        <span class="icon icon-error is-checked"></span>
+
+        <label>incorrect</label>
+        <input class="input is-checked input-error">
+        <span class="icon icon-correct is-checked"></span>
+        <span class="icon icon-error is-checked show"></span>
+        <br>
+        <div class="btn btn-animate">animate</div>
+
+      </form>
+
+      <p>
+        To simulate events I used the peace of code below.
+        It basically toggles classes in selected elements of a selected form.
+        I also added transitions to some CSS classes for mainly aesthetic reasons.
+      </p>
+
+      <h3>CoffeeScript</h3>
+
+      <pre><code class="language-coffeescript">
+animate = (formId) ->
+
+  getElements = (elClass) ->
+    document.getElementById(formId)
+            .getElementsByClassName(elClass)
+
+  inputs = getElements("input")
+  icons = getElements("icon")
+  btn = getElements("btn-animate")[0]
+
+  elAnimate = (el) ->
+    el.classList.toggle("animate")
+  elCheck = (el) ->
+    el.classList.contains("is-checked")
+
+  animationRun = ->
+    elAnimate(input) for input in inputs when elCheck(input)
+    elAnimate(icon) for icon in icons when elCheck(icon)
+    btn.classList.toggle("is-on")
+
+  btn.addEventListener "click", animationRun
+</pre></code>
+
+      <h3>SASS samples</h3>
+
+      <pre><code class="language-sass">
+
+// icons
+.icon-correct:before {
+  content: '\f418';
+  font: normal 30px/1 'Genericons';
+  color: $green;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+// inons' animation
+@keyframes show {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.show.animate {
+  animation-duration: 0.25s;
+  animation-name: show;
+  display: inline;
+}
+
+// button's dot is also an icon
+// it gets highlighted with this class:
+.btn-animate.is-on:before {
+  color: $yellow !important;
+  text-shadow: 0 0 5px;
+}
+
+// inputs
+.input-error.animate {
+  border-color: $red;
+  box-shadow: inset 0 1px 3px $red;
+}
+      </pre></code>
+
+      <p>
+        Why <code>.show.animate</code> instead of just <code>.show</code>? Well, if you'll look up to my event simulation
+        script, you'll see that animations are turned on when selected elements
+        receive <code>.animate</code> class. It's just a simple way to test.
+      </p>
+
+    </section>
+
+    <section>
+      <h2>Grabbing Attention</h2>
+
+      <form id="form-animate-2">
+
+        <label>correct</label>
+        <input class="input is-checked input-correct">
+        <span class="icon icon-correct is-checked show"></span>
+        <span class="icon icon-error is-checked"></span>
+
+        <label>incorrect</label>
+        <input class="input is-checked input-error flash">
+        <span class="icon icon-correct is-checked"></span>
+        <span class="icon icon-error is-checked show blink"></span>
+        <br>
+        <div class="btn btn-animate">animate</div>
+
+      </form>
+
+      <pre><code class="language-sass">
+@keyframes blink {
+  from, to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.blink.animate {
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-iteration-count: 3;
+}
+      </pre></code>
+
+    </section>
+
+    <section>
+      <h2>Success Indicator</h2>
+
+      <form id="form-animate-3">
+        <label>one</label>
+        <input class="input is-checked input-correct">
+        <span class="icon icon-correct is-checked show"></span>
+        <span class="icon icon-error is-checked"></span>
+
+        <label>two</label>
+        <input class="input is-checked input-correct">
+        <span class="icon icon-correct is-checked show"></span>
+        <span class="icon icon-error is-checked"></span>
+        <br>
+        <div class="btn btn-animate btn-success">animate</div>
+        <span class="icon icon-success is-checked show">done</span>
+
+      </form>
+
+      <pre><code class="language-sass">
+.icon-success {
+  color: $green;
+}
+
+.icon-success:before {
+  @extend .icon-correct;
+}
+
+.btn-success.is-on {
+  background-color: $green;
+}
+      </pre></code>
+
+    </section>
+
+  </div>
+
+<footer>
+   
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/animate.js"></script>
+<script src="prism/prism.js"></script>
+
+</body>
+
+</html>
